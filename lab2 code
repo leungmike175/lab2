@@ -1,0 +1,143 @@
+#include "mbed.h"
+#include "arm_book_lib.h"
+#define blink 500ms
+
+
+int main()
+{
+    DigitalIn enterButton(BUTTON1);
+    DigitalIn zero(D2);
+    DigitalIn one(D3);
+    DigitalIn two(D4);
+    DigitalIn three(D5);
+    DigitalIn four(D6);
+    DigitalIn five(D7);
+
+
+    DigitalOut alarmLed(LED1);
+    DigitalOut incorrectCodeLed(LED3);
+    DigitalOut systemBlockedLed(LED2);
+   
+
+
+    zero.mode(PullDown);
+    one.mode(PullDown);
+    two.mode(PullDown);
+    three.mode(PullDown);
+    four.mode(PullDown);
+    five.mode(PullDown);
+
+
+    alarmLed = OFF;
+    incorrectCodeLed = OFF;
+    systemBlockedLed = OFF;
+
+
+    bool alarmState = OFF;
+    int numberOfIncorrectCodes = 0;
+     int lockedtime=0;
+    while (true) {
+
+
+        if ( zero || one || four || five ) {
+            alarmState = ON;
+        }
+
+
+       
+ if ( numberOfIncorrectCodes < 4 ) {
+        if ( numberOfIncorrectCodes < 3 ) {
+           
+            if ( two && three && !four && !five && !enterButton ) {
+                alarmState = OFF;
+            }
+
+
+            if ( enterButton && !incorrectCodeLed && alarmState) {
+                if ( two && three && !four && !five ) {
+                    alarmState = OFF;
+                    incorrectCodeLed = OFF;
+                    numberOfIncorrectCodes = 0;
+                } else {
+                    incorrectCodeLed = ON;
+                    ThisThread::sleep_for(blink);
+                     incorrectCodeLed = OFF;
+                    numberOfIncorrectCodes = numberOfIncorrectCodes + 1;
+                }
+            }
+        } else {
+            for(int countblink=0;countblink<30;countblink++){
+                    alarmLed = ON;
+            ThisThread::sleep_for(blink);
+            alarmLed = OFF;
+            ThisThread::sleep_for(blink);
+            }
+            while(numberOfIncorrectCodes==3){
+                 if ( zero || one || four || five ) {
+            alarmState = ON;
+        }
+              if ( two && three && !four && !five && !enterButton ) {
+                alarmState = OFF;
+              }
+
+
+              if ( enterButton && !incorrectCodeLed && alarmState) {
+                 if ( two && three && !four && !five ) {
+                    alarmState = OFF;
+                    incorrectCodeLed = OFF;
+                    numberOfIncorrectCodes = 0;
+                 } else {
+                    incorrectCodeLed = ON;
+                    ThisThread::sleep_for(blink);
+                     incorrectCodeLed = OFF;
+                    numberOfIncorrectCodes = numberOfIncorrectCodes + 1;
+                 }
+              }
+            }
+           
+           
+        }
+ } else {
+          bool correctState=OFF;
+            for(int countblink=0;countblink<60;countblink++){
+                systemBlockedLed=ON;
+                    alarmLed = ON;
+            ThisThread::sleep_for(blink);
+        //      if ( zero || two || four || five ) {
+        //     correctState = OFF;
+        // }
+        //       if ( one && three  && !enterButton ) {
+        //         correctState = ON;
+        //       }
+
+
+              if ( enterButton ) {
+                 if ( one && three  ) {
+                    // alarmState = OFF;
+                    // incorrectCodeLed = OFF;
+                    // numberOfIncorrectCodes = 0;
+                    break;
+                    break;
+                    break;
+                 }
+            //      else {
+            //         systemBlockedLed=ON;
+            //      }
+              }
+            alarmLed = OFF;
+            ThisThread::sleep_for(blink);
+           
+            }
+            numberOfIncorrectCodes = 0;
+            systemBlockedLed=OFF;
+            lockedtime=lockedtime+1;
+            for(int i=0;i<lockedtime;i++){
+               alarmLed = ON;
+            ThisThread::sleep_for(blink);
+            alarmLed = OFF;
+            ThisThread::sleep_for(blink);
+            }
+        }
+    }
+}
+
