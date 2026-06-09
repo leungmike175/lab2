@@ -104,6 +104,19 @@ int main()
                     alarmLed = ON;
             ThisThread::sleep_for(blink);
      
+if ( enterButton ) {
+                 if ( one && three  ) {
+                    // alarmState = OFF;
+                    // incorrectCodeLed = OFF;
+                    // numberOfIncorrectCodes = 0;
+                    break;
+                    break;
+                    break;
+                 }
+            //      else {
+            //         systemBlockedLed=ON;
+            //      }
+              }
 
 
               
