@@ -47,7 +47,8 @@ int main()
        
  if ( numberOfIncorrectCodes < 4 ) {
         if ( numberOfIncorrectCodes < 3 ) {
-           
+            alarmLed = OFF;
+    systemBlockedLed = OFF;
             if ( two && three && !four && !five && !enterButton ) {
                 alarmState = OFF;
             }
@@ -111,33 +112,33 @@ int main()
         //       }
 
 
-              if ( enterButton ) {
+              
                  if ( one && three  ) {
-                    // alarmState = OFF;
-                    // incorrectCodeLed = OFF;
+                    
                     // numberOfIncorrectCodes = 0;
                     break;
-                    break;
-                    break;
+                 
+                   
                  }
             //      else {
             //         systemBlockedLed=ON;
             //      }
-              }
             alarmLed = OFF;
             ThisThread::sleep_for(blink);
            
             }
+           while(!enterButton){
+                systemBlockedLed=ON;
+                    alarmLed = ON;
+           }
             numberOfIncorrectCodes = 0;
-            systemBlockedLed=OFF;
             lockedtime=lockedtime+1;
             for(int i=0;i<lockedtime;i++){
-               alarmLed = ON;
+             systemBlockedLed=OFF;
             ThisThread::sleep_for(blink);
-            alarmLed = OFF;
+             systemBlockedLed=ON;
             ThisThread::sleep_for(blink);
             }
         }
     }
 }
-
